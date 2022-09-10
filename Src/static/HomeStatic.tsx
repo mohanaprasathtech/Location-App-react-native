@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {
   Alert,
+  Button,
   FlatList,
   Image,
   StyleSheet,
@@ -8,9 +9,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import data from './Data';
 import Geolocation from '@react-native-community/geolocation';
-const HomeStatic: React.FC = props => {
+import {datacontext} from '../../App';
+
+interface FuncProps {
+  handleremove: (id: number) => void;
+}
+
+const HomeStatic: React.FC<FuncProps> = props => {
+  const maindata = useContext(datacontext);
   var today = new Date().toLocaleDateString();
   var todaytime = new Date();
   var time =
@@ -20,8 +27,6 @@ const HomeStatic: React.FC = props => {
     ':' +
     todaytime.getSeconds();
 
-  const [datas, setdatas] = useState<any>([]);
-  const [count, setCount] = useState<number>(0);
   const [latitude, setlatitude] = useState<any>({lat: '', lon: ''});
   const [currentlocation, setcurrentlocation] = useState<any>([
     {
@@ -34,27 +39,11 @@ const HomeStatic: React.FC = props => {
   Geolocation.getCurrentPosition(info => {
     setlatitude({lat: info.coords.latitude, lon: info.coords.longitude});
   });
-  function handleremove(id) {
-    let ids = id;
-    setdatas(datas.filter(item => item.id !== ids));
-  }
 
   function handleremoveall() {
     Alert.alert('Cleared All Previous Location');
-    setdatas(datas => (datas.length = 0));
+    maindata.length = 0;
   }
-  useEffect(() => {
-    let interval;
-    if (count < 25) {
-      interval = setInterval(function () {
-        let tempData: any = datas.slice(0);
-        tempData.push(data[count]);
-        setdatas(tempData);
-        setCount(prev => prev + 1);
-      }, 300000);
-    }
-    return () => clearInterval(interval);
-  }, [count]);
   return (
     <View style={{marginTop: 10}}>
       <Text style={styles.header}>Location Manager</Text>
@@ -79,7 +68,7 @@ const HomeStatic: React.FC = props => {
       </View>
       <Text style={styles.prevtitle}>Previous Location</Text>
       <FlatList
-        data={datas}
+        data={maindata}
         renderItem={({item}) => (
           <>
             <View style={styles.listview}>
@@ -89,14 +78,14 @@ const HomeStatic: React.FC = props => {
               </View>
               <TouchableOpacity
                 style={styles.removebtn}
-                onPress={() => handleremove(item.id)}>
+                onPress={() => props.handleremove(item.id)}>
                 <Text style={styles.removebtntext}>Remove</Text>
               </TouchableOpacity>
             </View>
           </>
         )}
       />
-      {datas.length !== 0 ? (
+      {maindata.length !== 0 ? (
         <TouchableOpacity style={styles.clearallbtn} onPress={handleremoveall}>
           <Text style={styles.clearalltext}>Clear All</Text>
         </TouchableOpacity>
