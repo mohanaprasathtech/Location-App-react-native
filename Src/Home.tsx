@@ -52,7 +52,7 @@ const Home: React.FC = props => {
   }
   function handleremoveall() {
     Alert.alert('No data');
-    setdatas([]);
+    setdatas(datas => (datas.length = 0));
   }
   var url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude.lat}%2C${latitude.log}&key=72d3412b5c7f41e5a6a667d734601a95&language=en&pretty=1`;
   var locationdata: any = handlefetch(url);
@@ -62,7 +62,7 @@ const Home: React.FC = props => {
       time: locationdata?.timestamp?.created_http,
     },
   ]);
-  let postdata = handlepost(
+  var postdata = handlepost(
     'https://httpstat.us/200',
     locationObj.names,
     locationObj.time,
