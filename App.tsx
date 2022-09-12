@@ -26,7 +26,7 @@ function App() {
         tempData.push(staticdata[count]);
         setdata(tempData);
         setcount(prev => prev + 1);
-      }, 3000);
+      }, 20000);
     }
     return () => clearInterval(interval);
   }, [count]);
