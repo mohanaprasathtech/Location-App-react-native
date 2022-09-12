@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Alert,
   Button,
@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
 import {datacontext} from '../../App';
 
 interface FuncProps {
@@ -27,7 +26,6 @@ const HomeStatic: React.FC<FuncProps> = props => {
     ':' +
     todaytime.getSeconds();
 
-  const [latitude, setlatitude] = useState<any>({lat: '', lon: ''});
   const [currentlocation, setcurrentlocation] = useState<any>([
     {
       id: 0,
@@ -36,10 +34,6 @@ const HomeStatic: React.FC<FuncProps> = props => {
       time: time,
     },
   ]);
-  Geolocation.getCurrentPosition(info => {
-    setlatitude({lat: info.coords.latitude, lon: info.coords.longitude});
-  });
-
   function handleremoveall() {
     Alert.alert('Cleared All Previous Location');
     maindata.length = 0;
