@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import React, {useState, useContext} from 'react';
 import {
   Alert,
@@ -10,12 +11,15 @@ import {
   View,
 } from 'react-native';
 import {datacontext} from '../../App';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface FuncProps {
   handleremove: (id: number) => void;
+  settheme: any;
 }
 
 const HomeStatic: React.FC<FuncProps> = props => {
+  const colors = useTheme().colors;
   const maindata = useContext(datacontext);
   var today = new Date().toLocaleDateString();
   var todaytime = new Date();
@@ -25,7 +29,7 @@ const HomeStatic: React.FC<FuncProps> = props => {
     todaytime.getMinutes() +
     ':' +
     todaytime.getSeconds();
-
+  const [themestate, setthemestate] = useState<boolean>(true);
   const [currentlocation, setcurrentlocation] = useState<any>([
     {
       id: 0,
@@ -38,11 +42,37 @@ const HomeStatic: React.FC<FuncProps> = props => {
     Alert.alert('Cleared All Previous Location');
     maindata.length = 0;
   }
+  function handletheme() {
+    if (themestate) {
+      props.settheme('dark');
+    } else {
+      props.settheme('light');
+    }
+  }
   return (
     <View style={{marginTop: 10}}>
-      <Text style={styles.header}>Location Manager</Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text style={[styles.header, {color: colors.text}]}>
+          Location Manager
+        </Text>
+        <TouchableOpacity
+          style={{marginLeft: 100, marginTop: 5}}
+          onPress={() => {
+            setthemestate(!themestate);
+            handletheme();
+          }}>
+          <MaterialCommunityIcons
+            name="theme-light-dark"
+            size={35}
+            color="blue"
+          />
+        </TouchableOpacity>
+      </View>
+
       <View>
-        <Text style={styles.currenttitle}>Current Location</Text>
+        <Text style={[styles.currenttitle, {color: colors.text}]}>
+          Current Location
+        </Text>
         {currentlocation.length !== 0 ? (
           <View style={styles.locationview}>
             <Image
@@ -51,24 +81,37 @@ const HomeStatic: React.FC<FuncProps> = props => {
               }}
               style={styles.img}
             />
+
             <View style={{marginLeft: 18}}>
-              <Text style={styles.locationname}>{currentlocation[0].name}</Text>
-              <Text>{`${currentlocation[0].todaydate}, ${currentlocation[0].time}`}</Text>
+              <Text style={[styles.locationname, {color: colors.text}]}>
+                {currentlocation[0].name}
+              </Text>
+              <Text
+                style={{
+                  color: colors.text,
+                }}>{`${currentlocation[0].todaydate}, ${currentlocation[0].time}`}</Text>
             </View>
           </View>
         ) : (
           <View></View>
         )}
       </View>
-      <Text style={styles.prevtitle}>Previous Location</Text>
+      <Text style={[styles.prevtitle, , {color: colors.text}]}>
+        Previous Location
+      </Text>
       <FlatList
         data={maindata}
         renderItem={({item}) => (
           <>
             <View style={styles.listview}>
               <View style={{marginLeft: 18}}>
-                <Text style={styles.locationname}>{item.name}</Text>
-                <Text>{`${item.todaydate}  ${item.time}`}</Text>
+                <Text style={[styles.locationname, {color: colors.text}]}>
+                  {item.name}
+                </Text>
+                <Text
+                  style={{
+                    color: colors.text,
+                  }}>{`${item.todaydate}  ${item.time}`}</Text>
               </View>
               <TouchableOpacity
                 style={styles.removebtn}
@@ -81,7 +124,9 @@ const HomeStatic: React.FC<FuncProps> = props => {
       />
       {maindata.length !== 0 ? (
         <TouchableOpacity style={styles.clearallbtn} onPress={handleremoveall}>
-          <Text style={styles.clearalltext}>Clear All</Text>
+          <Text style={[styles.clearalltext, {color: colors.text}]}>
+            Clear All
+          </Text>
         </TouchableOpacity>
       ) : (
         <View></View>

@@ -6,12 +6,17 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Map from './Src/static/Map';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {useColorScheme} from 'react-native';
+import {DefaultTheme, DarkTheme} from '@react-navigation/native';
 
 export const datacontext = createContext<any | null>(null);
 export const Tab = createBottomTabNavigator<any>();
 function App() {
+  const scheme = useColorScheme();
   const [count, setcount] = useState<number>(0);
   const [data, setdata] = useState<any>([]);
+  const [theme, settheme] = useState<string>('light');
+  //console.log(scheme);
 
   function handleremove(id: number) {
     let ids = id;
@@ -34,7 +39,8 @@ function App() {
   return (
     <>
       <datacontext.Provider value={data}>
-        <NavigationContainer>
+        <NavigationContainer
+          theme={scheme === theme ? DefaultTheme : DarkTheme}>
           <Tab.Navigator>
             <Tab.Screen
               name="Location"
@@ -48,7 +54,9 @@ function App() {
                   />
                 ),
               }}>
-              {props => <HomeStatic handleremove={handleremove} />}
+              {props => (
+                <HomeStatic handleremove={handleremove} settheme={settheme} />
+              )}
             </Tab.Screen>
             <Tab.Screen
               name="Map"
