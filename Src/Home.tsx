@@ -54,7 +54,7 @@ const Home: React.FC = props => {
     Alert.alert('No data');
     setdatas(datas => (datas.length = 0));
   }
-  var url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude.lat}%2C${latitude.log}&key=72d3412b5c7f41e5a6a667d734601a95&language=en&pretty=1`;
+  var url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude.lat}%2C${latitude.log}&language=en&pretty=1`;
   var locationdata: any = handlefetch(url);
   setlocationObj([
     {
